@@ -104,13 +104,16 @@ const App = () => {
   const flow = {
     start: {
       message: t("welcome"),
+      transition: { duration: 100 },
+
       path: "assist_message",
-      transition: { duration: 300 },
     },
     assist_message: {
-      message: t("assist"),
+      message: () => {
+        return t("assist");
+      },
       path: "language_selection",
-      transition: { duration: 300 },
+      transition: { duration: 100 },
     },
     language_selection: {
       message: t("chooseLanguage"),
@@ -132,63 +135,61 @@ const App = () => {
     greeting_message: {
       message: t("welcome"),
       path: "first_loop",
-      transition: { duration: 300 },
+      transition: { duration: 100 },
     },
     first_loop: {
       message: t("assist"),
       path: "second_loop",
-      transition: { duration: 300 },
+      transition: { duration: 100 },
     },
     second_loop: {
       message: t("options"),
       options: [t("option1"), t("option2"), t("option3")],
-
       path: "handle_option_selection",
     },
     handle_option_selection: {
       transition: { duration: 0 },
-      path: async (params) => {
-        console.log(params);
+      path: (params) => {
         const selectedOption = params.userInput;
         if (selectedOption === t("option1")) {
-          await params.injectMessage(t("typeQuery"));
           return "handle_user_input_chat";
         } else if (selectedOption === t("option2")) {
-          await params.injectMessage(t("fillForm"));
           return "render1";
         } else if (selectedOption === t("option3")) {
-          await params.injectMessage(t("typeQuery"));
           return "handle_user_input_query";
         } else {
           return "unknown_input";
         }
       },
     },
-
     handle_user_input_chat: {
-      transition: { duration: 0 },
-      path: async (params) => {
-        const userInput = params.userInput;
-        const apiEndpoint = chatUrl;
+      message: "Please type your query????",
+      path: "handle_api",
+    },
+    handle_api: {
+      message: async (params) => {
         const apiBody = {
           input: {
             language: language,
-            text: userInput,
+            text: params?.userInput,
             context: "citizen",
           },
           output: {
             format: "text",
           },
         };
-        const message = await handleApiCall(apiEndpoint, apiBody);
-        await params.injectMessage(message);
+        return await handleApiCall(chatUrl, apiBody);
       },
+      path: "second_loop",
+      transition: { duration: 100 },
+    },
+    render1: {
+      render: <EligibilityForm />,
     },
     handle_user_input_query: {
       transition: { duration: 0 },
       path: async (params) => {
         const userInput = params.userInput;
-        const apiEndpoint = queryUrl;
         const apiBody = {
           input: {
             language: language,
@@ -199,12 +200,10 @@ const App = () => {
             format: "text",
           },
         };
-        const message = await handleApiCall(apiEndpoint, apiBody);
-        await params.injectMessage(message);
+        return await handleApiCall(chatUrl, apiBody);
       },
-    },
-    render1: {
-      render: <EligibilityForm />,
+      path: "second_loop",
+      transition: { duration: 100 },
     },
     repeat: {
       transition: { duration: 3000 },
