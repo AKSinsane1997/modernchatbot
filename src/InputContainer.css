@@ -1,0 +1,77 @@
+.input-container {
+
+    box-shadow: rgb(19 170 82 / 40%) 0px 2px 3px;
+    background: linear-gradient(322deg, rgba(46, 90, 0, 1) 38%, rgba(0, 124, 10, 1) 67%);
+    padding: 20px;
+    border-radius: 10px;
+    width: 365px;
+
+}
+
+.input-label {
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+.input-box {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.input-box:focus {
+    outline: none;
+    border-color: #80c904;
+    box-shadow: 0 0 5px rgba(128, 201, 4, 0.8);
+}
+
+.formSubmit {
+    display: inline-block;
+    outline: 0;
+    border: 0;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 500;
+    border-radius: 4px;
+    font-size: 14px;
+    height: 30px;
+    padding: 0px 15px;
+    text-shadow: rgb(0 0 0 / 25%) 0px 3px 8px;
+    background: linear-gradient(92.88deg, rgb(16, 207, 35) 9.16%, rgb(16, 161, 35) 43.89%, rgb(5, 117, 22) 64.72%);
+    transition: all 0.5s ease 0s;
+}
+
+.formSubmit:hover {
+    box-shadow: rgb(80 63 205 / 50%) 0px 1px 40px;
+    transition: all 0.1s ease 0s;
+}
+
+.schemeButton {
+
+
+    background-color: #c2fbd7;
+    border-radius: 100px;
+    box-shadow: rgba(44, 187, 99, .2) 0 -25px 18px -14px inset, rgba(44, 187, 99, .15) 0 1px 2px, rgba(44, 187, 99, .15) 0 2px 4px, rgba(44, 187, 99, .15) 0 4px 8px, rgba(44, 187, 99, .15) 0 8px 16px, rgba(44, 187, 99, .15) 0 16px 32px;
+    color: green;
+    cursor: pointer;
+    display: inline-block;
+    font-family: CerebriSans-Regular, -apple-system, system-ui, Roboto, sans-serif;
+    padding: 7px 20px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 250ms;
+    border: 0;
+    font-size: 16px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.schemeButton:hover {
+    box-shadow: rgba(44, 187, 99, .35) 0 -25px 18px -14px inset, rgba(44, 187, 99, .25) 0 1px 2px, rgba(44, 187, 99, .25) 0 2px 4px, rgba(44, 187, 99, .25) 0 4px 8px, rgba(44, 187, 99, .25) 0 8px 16px, rgba(44, 187, 99, .25) 0 16px 32px;
+    transform: scale(1.05) rotate(-1deg);
+}
