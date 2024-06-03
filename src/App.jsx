@@ -7,6 +7,7 @@ import EligibilityForm from "./EligibilityForm";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 import i18n from "./i18n";
+import SchemesList from "./SchemesList";
 
 const queryUrl = "http://20.244.97.59:8000/v1/query";
 const chatUrl = "http://20.244.97.59:8000/v1/chat";
@@ -15,6 +16,12 @@ const handleApiCall = async (url, body) => {
   try {
     const response = await axios.post(url, body);
     const message = response.data.output.text;
+
+    if (typeof message !== "string") {
+      console.error("API response text is not a string:", message);
+      return "Sorry, I couldn't find any information.";
+    }
+
     return message;
   } catch (error) {
     console.error("API call error:", error);
@@ -32,19 +39,11 @@ const App = () => {
     i18n.changeLanguage(lang);
     setIsLanguageSelected(true);
   };
+
   const flow = {
     start: {
-      message: t("welcome"),
       transition: { duration: 100 },
-
-      path: "assist_message",
-    },
-    assist_message: {
-      message: () => {
-        return t("assist");
-      },
       path: "language_selection",
-      transition: { duration: 100 },
     },
     language_selection: {
       message: t("chooseLanguage"),
@@ -98,7 +97,7 @@ const App = () => {
       path: "handle_api_query",
     },
     handle_api_query: {
-      message: async (params) => {
+      render: async (params, updateState, createChatBotMessage) => {
         const apiBody = {
           input: {
             language: language,
@@ -109,7 +108,8 @@ const App = () => {
             format: "text",
           },
         };
-        return await handleApiCall(queryUrl, apiBody);
+        const message = await handleApiCall(queryUrl, apiBody);
+        return <SchemesList schemes={message} language={language} />;
       },
       path: "second_loop",
       transition: { duration: 100 },
@@ -122,7 +122,7 @@ const App = () => {
       path: "handle_api_chat",
     },
     handle_api_chat: {
-      message: async (params) => {
+      render: async (params) => {
         const userInput = params.userInput;
         const apiBody = {
           input: {
@@ -134,7 +134,8 @@ const App = () => {
             format: "text",
           },
         };
-        return await handleApiCall(chatUrl, apiBody);
+        const response = await handleApiCall(chatUrl, apiBody);
+        return <div>{response}</div>;
       },
       path: "second_loop",
       transition: { duration: 100 },
@@ -149,7 +150,7 @@ const App = () => {
       path: "handle_option_selection",
     },
   };
-  console.log(language);
+
   const options = {
     theme: {
       primaryColor: "#2e5a00",

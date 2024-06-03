@@ -20,12 +20,11 @@ const resources = {
       generalQuery:
         "please type your query in the below input box. e.g -\n1) What is maternity scheme\n2) what is eligible criteria of maternity\n3) I have 3 children. Am I eligible?",
       chooseLanguage: "To start, kindly choose your Preferred Language:",
-      // Additional translations for EligibilityForm
       submit: "Submit",
-      select: "select",
+      select: "Select",
       pleaseAnswerAllQuestions:
         "Please answer all questions before submitting.",
-      schemeDetails: "Eligible Schemes:",
+      schemeDetails: "Here are the schemes you are eligible for:",
       schemeName: "Scheme Name",
       schemeDescription: "Scheme Description",
       moreDetails: "More Details",
@@ -51,7 +50,6 @@ const resources = {
       generalQuery:
         "कृपया अपना प्रश्न नीचे दिए गए इनपुट बॉक्स में टाइप करें। उदा -\n1) मातृत्व योजना क्या है\n2) मातृत्व की पात्रता मापदंड क्या है\n3) मेरे 3 बच्चे हैं। क्या मैं पात्र हूँ?",
       chooseLanguage: "शुरू करने के लिए, कृपया अपनी पसंदीदा भाषा का चयन करें:",
-      // Additional translations for EligibilityForm
       submit: "जमा करें",
       select: "चुनना",
       pleaseAnswerAllQuestions: "कृपया सभी प्रश्नों के उत्तर दें।",
