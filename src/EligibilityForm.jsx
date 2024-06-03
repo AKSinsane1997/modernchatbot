@@ -3,8 +3,11 @@ import axios from "axios";
 import "./InputContainer.css";
 import { FidgetSpinner } from "react-loader-spinner";
 import Offcanvas from "react-bootstrap/Offcanvas";
+import { useTranslation } from "react-i18next";
 
-const EligibilityForm = () => {
+const EligibilityForm = ({ language }) => {
+  const { t } = useTranslation();
+
   const [questions, setQuestions] = useState([]);
   const [selectedValues, setSelectedValues] = useState([]);
   const [resultMessage, setResultMessage] = useState("");
@@ -63,7 +66,7 @@ const EligibilityForm = () => {
     if (!validateForm()) {
       setResultMessage(
         <div>
-          <b>Please answer all questions before submitting.</b>
+          <b>{t("fillForm")}</b>
         </div>
       );
       return;
@@ -77,7 +80,6 @@ const EligibilityForm = () => {
         selectedValues
       )
       .then((response) => {
-        console.log(response.data);
         if (response?.data?.status) {
           const schemes = response?.data?.result;
           const schemeCount = schemes.length;
@@ -97,7 +99,7 @@ const EligibilityForm = () => {
           setResultMessage(
             <div>
               <p>
-                <i>Number of Schemes for which you are eligible is : </i>
+                <i>{t("eligibleSchemesCount")}</i>
                 <b>{schemeCount}</b>
               </p>
               {schemeDetails}
@@ -110,14 +112,14 @@ const EligibilityForm = () => {
           );
           setResultMessage(
             <div>
-              <b>Failed to check eligibility, kindly refill the form again.</b>
+              <b>{t("eligibilityCheckFailed")}</b>
             </div>
           );
         }
       })
       .catch((error) => {
         console.error("Error checking eligibility:", error);
-        setResultMessage("Error checking eligibility");
+        setResultMessage(t("eligibilityCheckError"));
       })
       .finally(() => {
         setIsSubmitted(false);
@@ -132,16 +134,16 @@ const EligibilityForm = () => {
           className="input-label"
           style={{ textShadow: "4px -1px 5px rgba(0,0,0,0.6)" }}
         >
-          {question.question}:
+          {language === "hi" ? question.questionHindi : question.question}:
         </div>
         <select
           className="input-box"
           onChange={(e) => handleInputChange(e, question?.labelId)}
         >
-          <option value="">Select</option>
+          <option value="">{t("select")}</option>
           {question.values.map((option) => (
             <option key={option.valueid} value={option.valueid}>
-              {option.valuename}
+              {language === "hi" ? option.valuenamehindi : option.valuename}
             </option>
           ))}
         </select>
@@ -174,7 +176,7 @@ const EligibilityForm = () => {
               role="status"
               aria-hidden="true"
             ></span>
-            &nbsp; please wait...
+            &nbsp; {t("pleaseWait")}...
           </button>
         ) : (
           <button
@@ -183,7 +185,7 @@ const EligibilityForm = () => {
             type="button"
             onClick={handleSubmit}
           >
-            submit
+            {t("submit")}
           </button>
         )}
       </div>
@@ -204,26 +206,27 @@ const EligibilityForm = () => {
         <Offcanvas.Body>
           <div>
             <p>
-              <b style={{ color: "green" }}>Department:</b>{" "}
+              <b style={{ color: "green" }}>{t("department")}:</b>{" "}
               {selectedSchemeDetails?.SchemeDetails?.departmentName}
             </p>
             <p>
-              <b style={{ color: "green" }}>Organization:</b>{" "}
+              <b style={{ color: "green" }}>{t("organization")}:</b>{" "}
               {selectedSchemeDetails?.SchemeDetails?.orgName}
             </p>
             <p>
-              <b style={{ color: "green" }}>Sector:</b>{" "}
+              <b style={{ color: "green" }}>{t("sector")}:</b>{" "}
               {selectedSchemeDetails?.SchemeDetails?.sectorName}
             </p>
             <p>
-              <b style={{ color: "green" }}>Scheme Description:</b>{" "}
+              <b style={{ color: "green" }}>{t("schemeDescription")}:</b>{" "}
               {selectedSchemeDetails?.SchemeDetails?.schemeDesc}
             </p>
             <p>
-              <b style={{ color: "green" }}>URL:</b>{" "}
+              <b style={{ color: "green" }}>{t("URL")}:</b>{" "}
               <a
                 href={selectedSchemeDetails?.SchemeDetails?.url}
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 {selectedSchemeDetails?.SchemeDetails?.url}
               </a>

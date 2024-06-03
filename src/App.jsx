@@ -8,74 +8,6 @@ import axios from "axios";
 import { useTranslation } from "react-i18next";
 import i18n from "./i18n";
 
-const options = {
-  theme: {
-    primaryColor: "#2e5a00",
-    secondaryColor: "#4f9e07",
-    fontFamily: "Arial, sans-serif",
-  },
-  userBubble: { showAvatar: false, animate: true },
-  botBubble: {
-    showAvatar: false,
-    simStream: true,
-    animate: true,
-    dangerouslySetInnerHtml: true,
-  },
-  chatHistory: {
-    disabled: false,
-  },
-  chatWindowStyle: { width: "475px", height: "650px" },
-  footer: {
-    text: `AKSinsane`,
-  },
-  header: {
-    title: (
-      <>
-        {" "}
-        <b style={{ padding: "2px ", fontSize: "20px" }}>UDDPBot</b> 🤖
-      </>
-    ),
-  },
-  notification: {
-    disabled: true,
-  },
-  tooltip: {
-    text: (
-      <>
-        <div>
-          <ReactTyped
-            strings={[
-              "Hello 👋 I'm your chatbot",
-              "I am here to assist you!!",
-              "Click here to begin 👉",
-            ]}
-            typeSpeed={40}
-            backSpeed={50}
-            loop
-            style={{ color: "white", fontWeight: "bold" }}
-          />
-          <br />
-        </div>
-      </>
-    ),
-  },
-  audio: {
-    disabled: false,
-    language: "hi-IN",
-  },
-  voice: {
-    disabled: false,
-    autoSendDisabled: true,
-    language: "hi-IN",
-  },
-  chatButton: {
-    icon: chatbot1,
-  },
-  fileAttachment: {
-    disabled: true,
-  },
-};
-
 const queryUrl = "http://20.244.97.59:8000/v1/query";
 const chatUrl = "http://20.244.97.59:8000/v1/chat";
 
@@ -91,8 +23,8 @@ const handleApiCall = async (url, body) => {
 };
 
 const App = () => {
-  const { t } = useTranslation();
-  const [language, setLanguage] = useState("en");
+  const { t, i18n } = useTranslation();
+  const [language, setLanguage] = useState("hi");
   const [isLanguageSelected, setIsLanguageSelected] = useState(false);
 
   const handleLanguageSelection = (lang) => {
@@ -100,17 +32,19 @@ const App = () => {
     i18n.changeLanguage(lang);
     setIsLanguageSelected(true);
   };
-
   const flow = {
     start: {
       message: t("welcome"),
+      transition: { duration: 100 },
+
       path: "assist_message",
-      transition: { duration: 300 },
     },
     assist_message: {
-      message: t("assist"),
+      message: () => {
+        return t("assist");
+      },
       path: "language_selection",
-      transition: { duration: 300 },
+      transition: { duration: 100 },
     },
     language_selection: {
       message: t("chooseLanguage"),
@@ -132,44 +66,64 @@ const App = () => {
     greeting_message: {
       message: t("welcome"),
       path: "first_loop",
-      transition: { duration: 300 },
+      transition: { duration: 100 },
     },
     first_loop: {
       message: t("assist"),
       path: "second_loop",
-      transition: { duration: 300 },
+      transition: { duration: 100 },
     },
     second_loop: {
       message: t("options"),
       options: [t("option1"), t("option2"), t("option3")],
-
       path: "handle_option_selection",
     },
     handle_option_selection: {
       transition: { duration: 0 },
-      path: async (params) => {
-        console.log(params);
+      path: (params) => {
         const selectedOption = params.userInput;
         if (selectedOption === t("option1")) {
-          await params.injectMessage(t("typeQuery"));
-          return "handle_user_input_chat";
+          return "handle_user_input_query";
         } else if (selectedOption === t("option2")) {
-          await params.injectMessage(t("fillForm"));
           return "render1";
         } else if (selectedOption === t("option3")) {
-          await params.injectMessage(t("typeQuery"));
-          return "handle_user_input_query";
+          return "handle_user_input_chat";
         } else {
           return "unknown_input";
         }
       },
     },
-
+    handle_user_input_query: {
+      message: t("typeQuery"),
+      path: "handle_api_query",
+    },
+    handle_api_query: {
+      message: async (params) => {
+        const apiBody = {
+          input: {
+            language: language,
+            text: params?.userInput,
+            audienceType: "citizen",
+          },
+          output: {
+            format: "text",
+          },
+        };
+        return await handleApiCall(queryUrl, apiBody);
+      },
+      path: "second_loop",
+      transition: { duration: 100 },
+    },
+    render1: {
+      render: <EligibilityForm language={language} />,
+    },
     handle_user_input_chat: {
-      transition: { duration: 0 },
-      path: async (params) => {
+      message: t("generalQuery"),
+      path: "handle_api_chat",
+    },
+    handle_api_chat: {
+      message: async (params) => {
         const userInput = params.userInput;
-        const apiEndpoint = chatUrl;
         const apiBody = {
           input: {
             language: language,
@@ -180,31 +134,10 @@ const App = () => {
             format: "text",
           },
         };
-        const message = await handleApiCall(apiEndpoint, apiBody);
-        await params.injectMessage(message);
+        return await handleApiCall(chatUrl, apiBody);
       },
-    },
-    handle_user_input_query: {
-      transition: { duration: 0 },
-      path: async (params) => {
-        const userInput = params.userInput;
-        const apiEndpoint = queryUrl;
-        const apiBody = {
-          input: {
-            language: language,
-            text: userInput,
-            audienceType: "citizen",
-          },
-          output: {
-            format: "text",
-          },
-        };
-        const message = await handleApiCall(apiEndpoint, apiBody);
-        await params.injectMessage(message);
-      },
-    },
-    render1: {
-      render: <EligibilityForm />,
+      path: "second_loop",
+      transition: { duration: 100 },
     },
     repeat: {
       transition: { duration: 3000 },
@@ -216,8 +149,84 @@ const App = () => {
       path: "handle_option_selection",
     },
   };
+  console.log(language);
+  const options = {
+    theme: {
+      primaryColor: "#2e5a00",
+      secondaryColor: "#4f9e07",
+      fontFamily: "Arial, sans-serif",
+    },
+    userBubble: { showAvatar: false, animate: true },
+    botBubble: {
+      showAvatar: false,
+      simStream: true,
+      animate: true,
+      dangerouslySetInnerHtml: true,
+    },
+    chatHistory: {
+      disabled: false,
+    },
+    chatWindowStyle: { width: "475px", height: "650px" },
+    footer: {
+      text: `Chatbot`,
+    },
+    header: {
+      title: (
+        <>
+          {" "}
+          <b style={{ padding: "2px ", fontSize: "20px" }}>UDDPBot</b> 🤖
+        </>
+      ),
+    },
+    notification: {
+      disabled: true,
+    },
+    tooltip: {
+      text: (
+        <>
+          <div>
+            <ReactTyped
+              strings={[
+                "Hello 👋 I'm your chatbot",
+                "I am here to assist you!!",
+                "Click here to begin 👉",
+              ]}
+              typeSpeed={40}
+              backSpeed={50}
+              loop
+              style={{ color: "white", fontWeight: "bold" }}
+            />
+            <br />
+          </div>
+        </>
+      ),
+    },
+    audio: {
+      disabled: false,
+      defaultToggledOn: false,
+      language: language === "hi" ? "hi-IN" : "en-IN",
+    },
+    voice: {
+      disabled: false,
+      autoSendDisabled: true,
+      language: "zh-CN",
+    },
+    chatButton: {
+      icon: chatbot1,
+    },
+    fileAttachment: {
+      disabled: true,
+    },
+  };
 
-  return <ChatBot options={options} flow={flow} />;
+  return (
+    <ChatBot
+      options={options}
+      flow={flow}
+      language={language}
+      setLanguage={handleLanguageSelection}
+    />
+  );
 };
 
 export default App;
