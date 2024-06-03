@@ -53,7 +53,7 @@ const resources = {
       submit: "जमा करें",
       select: "चुनना",
       pleaseAnswerAllQuestions: "कृपया सभी प्रश्नों के उत्तर दें।",
-      schemeDetails: "पात्र योजनाएँ:",
+      schemeDetails: "यहां वे योजनाएं दी गई हैं जिनके लिए आप पात्र हैं:",
       schemeName: "योजना का नाम",
       schemeDescription: "योजना का विवरण",
       moreDetails: "अधिक जानकारी",

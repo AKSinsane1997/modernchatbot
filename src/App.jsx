@@ -15,11 +15,15 @@ const chatUrl = "http://20.244.97.59:8000/v1/chat";
 const handleApiCall = async (url, body) => {
   try {
     const response = await axios.post(url, body);
-    const message = response.data.output.text;
+    let message = response.data.output.text;
 
     if (typeof message !== "string") {
       console.error("API response text is not a string:", message);
       return "Sorry, I couldn't find any information.";
+    }
+
+    if (url === chatUrl) {
+      message = message.replace(/Source:.*$/, "");
     }
 
     return message;
@@ -134,8 +138,7 @@ const App = () => {
             format: "text",
           },
         };
-        const response = await handleApiCall(chatUrl, apiBody);
-        return <div>{response}</div>;
+        return await handleApiCall(chatUrl, apiBody);
       },
       path: "second_loop",
       transition: { duration: 100 },
