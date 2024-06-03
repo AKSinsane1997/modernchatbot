@@ -19,7 +19,8 @@ const resources = {
       fillForm: "Please fill out the eligibility form.",
       generalQuery:
         "please type your query in the below input box. e.g -\n1) What is maternity scheme\n2) what is eligible criteria of maternity\n3) I have 3 children. Am I eligible?",
-      chooseLanguage: "To start, kindly choose your Preferred Language:",
+      chooseLanguage:
+        "Johar 🙏 ,To start kindly choose your Preferred Language:",
       submit: "Submit",
       select: "Select",
       pleaseAnswerAllQuestions:

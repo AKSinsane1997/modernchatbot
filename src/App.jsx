@@ -119,7 +119,7 @@ const App = () => {
       transition: { duration: 100 },
     },
     render1: {
-      render: <EligibilityForm language={language} />,
+      render: <EligibilityForm />,
     },
     handle_user_input_chat: {
       message: t("generalQuery"),
