@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ChatBot from "react-chatbotify";
+import ChatBot, { PathsContext } from "react-chatbotify";
 import chatbot1 from "../src/assets/chatbot.gif";
 import "./App.css";
 import { ReactTyped } from "react-typed";
@@ -37,6 +37,14 @@ const App = () => {
   const { t, i18n } = useTranslation();
   const [language, setLanguage] = useState("hi");
   const [isLanguageSelected, setIsLanguageSelected] = useState(false);
+  const [paths, setPaths] = useState(["start"]);
+  const jumpToStart = () => {
+    setPaths((prev) => [...prev, "start"]);
+  };
+
+  const jumpToEnd = () => {
+    setPaths((prev) => [...prev, "second_loop"]);
+  };
 
   const handleLanguageSelection = (lang) => {
     setLanguage(lang);
@@ -46,6 +54,7 @@ const App = () => {
 
   const flow = {
     start: {
+      message: "hhddhhjd",
       transition: { duration: 100 },
       path: "language_selection",
     },
@@ -78,7 +87,7 @@ const App = () => {
     },
     second_loop: {
       message: t("options"),
-      options: [t("option1"), t("option2"), t("option3")],
+      options: [t("option1"), t("option2"), t("option3"), t("option4")],
       path: "handle_option_selection",
     },
     handle_option_selection: {
@@ -101,7 +110,7 @@ const App = () => {
       path: "handle_api_query",
     },
     handle_api_query: {
-      render: async (params, updateState, createChatBotMessage) => {
+      render: async (params) => {
         const apiBody = {
           input: {
             language: language,
@@ -149,7 +158,7 @@ const App = () => {
     },
     unknown_input: {
       message: t("unknown"),
-      options: [t("option1"), t("option2"), t("option3")],
+      options: [t("option1"), t("option2"), t("option3"), t("option4")],
       path: "handle_option_selection",
     },
   };
@@ -169,6 +178,7 @@ const App = () => {
     },
     chatHistory: {
       disabled: false,
+      storageKey: "example_custom_paths",
     },
     chatWindowStyle: { width: "475px", height: "650px" },
     footer: {
@@ -208,12 +218,12 @@ const App = () => {
     audio: {
       disabled: false,
       defaultToggledOn: false,
-      language: language === "hi" ? "hi-IN" : "en-IN",
+      language: "hi-IN",
     },
     voice: {
       disabled: false,
       autoSendDisabled: true,
-      language: "zh-CN",
+      // language: "zh-CN",
     },
     chatButton: {
       icon: chatbot1,
@@ -221,16 +231,54 @@ const App = () => {
     fileAttachment: {
       disabled: true,
     },
+    emoji: {
+      list: ["restart"],
+    },
+    advance: {
+      useCustomPaths: true,
+    },
+    chatInput: {
+      sendCheckboxOutput: true,
+      sendOptionOutput: true,
+      showCharacterCount: true,
+    },
   };
 
   return (
-    <ChatBot
-      options={options}
-      flow={flow}
-      language={language}
-      setLanguage={handleLanguageSelection}
-    />
+    <>
+      <PathsContext.Provider value={{ paths: paths, setPaths: setPaths }}>
+        <Button onClick={jumpToStart} text="Click me to jump to start!" />
+        <Button onClick={jumpToEnd} text="Click me to jump to end!" />
+        <ChatBot
+          options={options}
+          flow={flow}
+          language={language}
+          setLanguage={handleLanguageSelection}
+        ></ChatBot>
+      </PathsContext.Provider>
+    </>
   );
 };
-
+const buttonStyle = {
+  backgroundColor: "#ff0000",
+  color: "white",
+  border: "none",
+  padding: "10px 20px",
+  textAlign: "center",
+  textDecoration: "none",
+  display: "inline-block",
+  fontSize: "16px",
+  borderRadius: "5px",
+  cursor: "pointer",
+  transition: "background-color 0.2s",
+  margin: 10,
+};
+const Button = (props) => {
+  console.log(props);
+  return (
+    <button onClick={props.onClick} style={buttonStyle}>
+      {props.text}
+    </button>
+  );
+};
 export default App;
