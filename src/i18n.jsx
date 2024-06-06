@@ -14,6 +14,8 @@ const resources = {
       option2:
         "Click here to know your scheme eligibility by providing your eligibility criteria",
       option3: "Click here for general queries related to portal and schemes",
+      option4:
+        "Discover your scheme eligibility by answering a few quick questions. Click here to get started!",
       typeQuery:
         "please type your query in the below input box. e.g - (I am 61 years old female construction worker belonging to scheduled caste category. what are my eligible schemes?)",
       fillForm: "Please fill out the eligibility form.",
@@ -45,6 +47,8 @@ const resources = {
         "अपनी पात्रता मानदंड के द्वारा योजनाओ की पात्रता जानने के लिए यहां क्लिक करें",
       option3:
         "पोर्टल और योजनाओं से संबंधित सामान्य प्रश्नों के लिए यहां क्लिक करें",
+      option4:
+        "निम्नलिखित कुछ प्रश्नों के उत्तर देकर अपनी योजना पात्रता जानें। आरंभ करने के लिए यहां क्लिक करें!",
       typeQuery:
         "कृपया अपना प्रश्न नीचे दिए गए इनपुट बॉक्स में टाइप करें। उदा - (मैं 61 वर्ष की महिला निर्माण कार्यकर्ता हूं जो अनुसूचित जाति वर्ग से संबंधित है। मेरी योग्य योजनाएँ क्या हैं?)",
       fillForm: "कृपया पात्रता फॉर्म भरें।",

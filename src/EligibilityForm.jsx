@@ -167,7 +167,10 @@ const EligibilityForm = () => {
           />
         </div>
       )}
-      <div className={`input-container ${isLoading ? "hidden" : ""}`}>
+      <div
+        className={`input-container ${isLoading ? "hidden" : ""}`}
+        style={{ marginTop: "10px", marginLeft: "10px" }}
+      >
         {questions.map((question) => renderQuestion(question))}
         {isSubmitted ? (
           <button className="btn btn-success" type="button" disabled>
