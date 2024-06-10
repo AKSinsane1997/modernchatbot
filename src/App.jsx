@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ChatBot, { PathsContext } from "react-chatbotify";
 import chatbot1 from "../src/assets/chatbot.gif";
 import "./App.css";
@@ -38,8 +38,15 @@ const App = () => {
   const [language, setLanguage] = useState("hi");
   const [isLanguageSelected, setIsLanguageSelected] = useState(false);
   const [paths, setPaths] = useState(["start"]);
+  const [userName, setUserName] = useState("");
+  const [userAge, setUserAge] = useState("");
+
+  useEffect(() => {
+    i18n.changeLanguage(language);
+  }, [language]);
+
   const jumpToStart = () => {
-    setPaths((prev) => [...prev, "start"]);
+    setPaths((prev) => [...prev, "language_selection"]);
   };
 
   const jumpToEnd = () => {
@@ -54,12 +61,24 @@ const App = () => {
 
   const flow = {
     start: {
-      message: "hhddhhjd",
-      transition: { duration: 100 },
-      path: "language_selection",
+      path: "ask_name",
+      transition: { duration: 300 },
     },
+    ask_name: {
+      message: "Hello there! What is your name?",
+      path: "collect_name",
+    },
+    collect_name: {
+      transition: { duration: 0 },
+      path: (params) => {
+        setUserName(params.userInput);
+        return "language_selection";
+      },
+    },
+
     language_selection: {
-      message: t("chooseLanguage"),
+      message: (params) =>
+        `Johar 🙏 ${params.userInput} ,To start kindly choose your Preferred Language:`,
       options: ["English", "हिन्दी"],
       path: "wait_for_language_selection",
     },
@@ -87,7 +106,7 @@ const App = () => {
     },
     second_loop: {
       message: t("options"),
-      options: [t("option1"), t("option2"), t("option3"), t("option4")],
+      options: [t("option1"), t("option3")],
       path: "handle_option_selection",
     },
     handle_option_selection: {
@@ -158,7 +177,7 @@ const App = () => {
     },
     unknown_input: {
       message: t("unknown"),
-      options: [t("option1"), t("option2"), t("option3"), t("option4")],
+      options: [t("option1"), t("option3")],
       path: "handle_option_selection",
     },
   };
@@ -193,7 +212,11 @@ const App = () => {
       ),
     },
     notification: {
-      disabled: true,
+      disabled: false,
+      defaultToggledOn: true,
+      volume: 0.2,
+
+      showCount: true,
     },
     tooltip: {
       text: (
@@ -218,15 +241,19 @@ const App = () => {
     audio: {
       disabled: false,
       defaultToggledOn: false,
-      language: "hi-IN",
+      language: language === "hi" ? "hi-IN" : "en-IN",
     },
     voice: {
       disabled: false,
       autoSendDisabled: true,
-      // language: "zh-CN",
+      language: language === "en" ? "en-IN" : "hi-IN",
     },
     chatButton: {
       icon: chatbot1,
+    },
+    chatWindow: {
+      showScrollbar: true,
+      showMessagePrompt: true,
     },
     fileAttachment: {
       disabled: true,
@@ -238,17 +265,18 @@ const App = () => {
       useCustomPaths: true,
     },
     chatInput: {
-      sendCheckboxOutput: true,
-      sendOptionOutput: true,
-      showCharacterCount: true,
+      // sendCheckboxOutput: true,
+      // sendOptionOutput: true,
+      // showCharacterCount: true,
+      allowNewline: true,
     },
   };
 
   return (
     <>
+      <Button onClick={jumpToStart} text="language" />
+      <Button onClick={jumpToEnd} text="restart" />
       <PathsContext.Provider value={{ paths: paths, setPaths: setPaths }}>
-        <Button onClick={jumpToStart} text="Click me to jump to start!" />
-        <Button onClick={jumpToEnd} text="Click me to jump to end!" />
         <ChatBot
           options={options}
           flow={flow}
@@ -259,8 +287,9 @@ const App = () => {
     </>
   );
 };
+
 const buttonStyle = {
-  backgroundColor: "#ff0000",
+  backgroundColor: "green",
   color: "white",
   border: "none",
   padding: "10px 20px",
@@ -273,6 +302,7 @@ const buttonStyle = {
   transition: "background-color 0.2s",
   margin: 10,
 };
+
 const Button = (props) => {
   console.log(props);
   return (
@@ -281,4 +311,5 @@ const Button = (props) => {
     </button>
   );
 };
+
 export default App;
