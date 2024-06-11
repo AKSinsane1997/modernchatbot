@@ -1,5 +1,9 @@
-import React, { useEffect, useState } from "react";
-import ChatBot, { PathsContext } from "react-chatbotify";
+import React, { useState, useEffect } from "react";
+import ChatBot, {
+  PathsContext,
+  BotOptionsContext,
+  getDefaultBotOptions,
+} from "react-chatbotify";
 import chatbot1 from "../src/assets/chatbot.gif";
 import "./App.css";
 import { ReactTyped } from "react-typed";
@@ -35,16 +39,129 @@ const handleApiCall = async (url, body) => {
 
 const App = () => {
   const { t, i18n } = useTranslation();
-  const [language, setLanguage] = useState("hi");
+  const [language, setLanguage] = useState("");
   const [isLanguageSelected, setIsLanguageSelected] = useState(false);
-  const [paths, setPaths] = useState(["start"]);
+  const [paths, setPaths] = useState([]);
   const [userName, setUserName] = useState("");
-  const [userAge, setUserAge] = useState("");
+  // const [userAge, setUserAge] = useState("");
+
+  const defaultBotOptions = getDefaultBotOptions();
+
+  const [botOptions, setBotOptions] = useState({
+    ...defaultBotOptions,
+    theme: {
+      ...defaultBotOptions.theme,
+      primaryColor: "#2e5a00",
+      secondaryColor: "#4f9e07",
+      fontFamily: "Arial, sans-serif",
+    },
+    userBubble: {
+      ...defaultBotOptions.userBubble,
+      showAvatar: false,
+      animate: true,
+    },
+    botBubble: {
+      ...defaultBotOptions.botBubble,
+      showAvatar: false,
+      simStream: true,
+      animate: true,
+      dangerouslySetInnerHtml: true,
+    },
+    chatHistory: {
+      ...defaultBotOptions.chatHistory,
+      disabled: false,
+      storageKey: "example_custom_paths",
+    },
+    chatWindowStyle: {
+      ...defaultBotOptions.chatWindowStyle,
+      width: "475px",
+      height: "650px",
+    },
+    footer: { ...defaultBotOptions.footer, text: `Chatbot` },
+    header: {
+      ...defaultBotOptions.header,
+      title: (
+        <>
+          {" "}
+          <b style={{ padding: "2px ", fontSize: "20px" }}>UDDPBot</b> 🤖
+        </>
+      ),
+    },
+    notification: {
+      ...defaultBotOptions.notification,
+      disabled: false,
+      defaultToggledOn: true,
+      volume: 0.2,
+      showCount: true,
+    },
+    tooltip: {
+      ...defaultBotOptions.tooltip,
+      text: (
+        <>
+          <div>
+            <ReactTyped
+              strings={[
+                "Hello 👋 I'm your chatbot",
+                "I am here to assist you!!",
+                "Click here to begin 👉",
+              ]}
+              typeSpeed={40}
+              backSpeed={50}
+              loop
+              style={{ color: "white", fontWeight: "bold" }}
+            />
+            <br />
+          </div>
+        </>
+      ),
+    },
+    audio: {
+      ...defaultBotOptions.audio,
+      disabled: false,
+      defaultToggledOn: false,
+      language: language === "en",
+    },
+    voice: {
+      ...defaultBotOptions.voice,
+      disabled: false,
+      autoSendDisabled: true,
+      language: language === "en",
+    },
+    chatButton: { ...defaultBotOptions.chatButton, icon: chatbot1 },
+    chatWindow: {
+      ...defaultBotOptions.chatWindow,
+      showScrollbar: true,
+      showMessagePrompt: true,
+    },
+    fileAttachment: { ...defaultBotOptions.fileAttachment, disabled: true },
+    emoji: { ...defaultBotOptions.emoji, list: ["restart"] },
+    advance: {
+      ...defaultBotOptions.advance,
+      useCustomPaths: true,
+      useCustomBotOptions: true,
+    },
+    chatInput: { ...defaultBotOptions.chatInput, allowNewline: true },
+  });
 
   useEffect(() => {
     i18n.changeLanguage(language);
+    console.log(language);
+    setBotOptions((prevOptions) => ({
+      ...prevOptions,
+      audio: {
+        ...prevOptions.audio,
+        language: language === "en" ? "en-IN" : "hi-IN",
+      },
+      voice: {
+        ...prevOptions.voice,
+        language: language === "en" ? "en-IN" : "hi-IN",
+      },
+      // advance: {
+      //   // useCustomPaths: true,
+      //   useCustomBotOptions: true,
+      // },
+    }));
   }, [language]);
-
   const jumpToStart = () => {
     setPaths((prev) => [...prev, "language_selection"]);
   };
@@ -75,10 +192,9 @@ const App = () => {
         return "language_selection";
       },
     },
-
     language_selection: {
       message: (params) =>
-        `Johar 🙏 ${params.userInput} ,To start kindly choose your Preferred Language:`,
+        `Johar 🙏 ${params.userInput}, To start kindly choose your Preferred Language:`,
       options: ["English", "हिन्दी"],
       path: "wait_for_language_selection",
     },
@@ -182,107 +298,19 @@ const App = () => {
     },
   };
 
-  const options = {
-    theme: {
-      primaryColor: "#2e5a00",
-      secondaryColor: "#4f9e07",
-      fontFamily: "Arial, sans-serif",
-    },
-    userBubble: { showAvatar: false, animate: true },
-    botBubble: {
-      showAvatar: false,
-      simStream: true,
-      animate: true,
-      dangerouslySetInnerHtml: true,
-    },
-    chatHistory: {
-      disabled: false,
-      storageKey: "example_custom_paths",
-    },
-    chatWindowStyle: { width: "475px", height: "650px" },
-    footer: {
-      text: `Chatbot`,
-    },
-    header: {
-      title: (
-        <>
-          {" "}
-          <b style={{ padding: "2px ", fontSize: "20px" }}>UDDPBot</b> 🤖
-        </>
-      ),
-    },
-    notification: {
-      disabled: false,
-      defaultToggledOn: true,
-      volume: 0.2,
-
-      showCount: true,
-    },
-    tooltip: {
-      text: (
-        <>
-          <div>
-            <ReactTyped
-              strings={[
-                "Hello 👋 I'm your chatbot",
-                "I am here to assist you!!",
-                "Click here to begin 👉",
-              ]}
-              typeSpeed={40}
-              backSpeed={50}
-              loop
-              style={{ color: "white", fontWeight: "bold" }}
-            />
-            <br />
-          </div>
-        </>
-      ),
-    },
-    audio: {
-      disabled: false,
-      defaultToggledOn: false,
-      language: language === "hi" ? "hi-IN" : "en-IN",
-    },
-    voice: {
-      disabled: false,
-      autoSendDisabled: true,
-      language: language === "en" ? "en-IN" : "hi-IN",
-    },
-    chatButton: {
-      icon: chatbot1,
-    },
-    chatWindow: {
-      showScrollbar: true,
-      showMessagePrompt: true,
-    },
-    fileAttachment: {
-      disabled: true,
-    },
-    emoji: {
-      list: ["restart"],
-    },
-    advance: {
-      useCustomPaths: true,
-    },
-    chatInput: {
-      // sendCheckboxOutput: true,
-      // sendOptionOutput: true,
-      // showCharacterCount: true,
-      allowNewline: true,
-    },
-  };
-
   return (
     <>
       <Button onClick={jumpToStart} text="language" />
       <Button onClick={jumpToEnd} text="restart" />
       <PathsContext.Provider value={{ paths: paths, setPaths: setPaths }}>
-        <ChatBot
-          options={options}
-          flow={flow}
-          language={language}
-          setLanguage={handleLanguageSelection}
-        ></ChatBot>
+        <BotOptionsContext.Provider value={{ botOptions, setBotOptions }}>
+          <ChatBot
+            options={botOptions}
+            flow={flow}
+            language={language}
+            setLanguage={handleLanguageSelection}
+          />
+        </BotOptionsContext.Provider>
       </PathsContext.Provider>
     </>
   );
@@ -304,9 +332,8 @@ const buttonStyle = {
 };
 
 const Button = (props) => {
-  console.log(props);
   return (
-    <button onClick={props.onClick} style={buttonStyle}>
+    <button style={buttonStyle} onClick={props.onClick}>
       {props.text}
     </button>
   );
