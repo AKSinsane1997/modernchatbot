@@ -51,8 +51,8 @@ const App = () => {
     ...defaultBotOptions,
     theme: {
       ...defaultBotOptions.theme,
-      primaryColor: "#2e5a00",
-      secondaryColor: "#4f9e07",
+      primaryColor: "#198754",
+      secondaryColor: "#125F3B",
       fontFamily: "Arial, sans-serif",
     },
     userBubble: {
@@ -134,7 +134,27 @@ const App = () => {
       showMessagePrompt: true,
     },
     fileAttachment: { ...defaultBotOptions.fileAttachment, disabled: true },
-    emoji: { ...defaultBotOptions.emoji, list: ["restart"] },
+    emoji: {
+      ...defaultBotOptions.emoji,
+      list: [
+        "😀",
+        "😃",
+        "😄",
+        "😅",
+        "😊",
+        "😌",
+        "😇",
+        "🙃",
+        "🤣",
+        "😍",
+        "🥰",
+        "🥳",
+        "🎉",
+        "🎈",
+        "🚀",
+        "⭐️",
+      ],
+    },
     advance: {
       ...defaultBotOptions.advance,
       useCustomPaths: true,
@@ -189,12 +209,17 @@ const App = () => {
       transition: { duration: 0 },
       path: (params) => {
         setUserName(params.userInput);
-        return "language_selection";
+        return "welcome_name";
       },
     },
-    language_selection: {
+    welcome_name: {
       message: (params) =>
-        `Johar 🙏 ${params.userInput}, To start kindly choose your Preferred Language:`,
+        `Johar 🙏 ${params.userInput}, Welcome to UDDP chatbot`,
+      path: "language_selection",
+      transition: { duration: 500 },
+    },
+    language_selection: {
+      message: `To start kindly choose your Preferred Language:`,
       options: ["English", "हिन्दी"],
       path: "wait_for_language_selection",
     },
@@ -222,7 +247,7 @@ const App = () => {
     },
     second_loop: {
       message: t("options"),
-      options: [t("option1"), t("option3")],
+      options: [t("option1"), t("option2"), t("option3")],
       path: "handle_option_selection",
     },
     handle_option_selection: {
@@ -259,8 +284,33 @@ const App = () => {
         const message = await handleApiCall(queryUrl, apiBody);
         return <SchemesList schemes={message} language={language} />;
       },
-      path: "second_loop",
+      // after handling api query, prompt user for choice to continue
+      path: "prompt_user_query",
       transition: { duration: 100 },
+    },
+    // use a prompt user block to ask for their choice
+    prompt_user_query: {
+      message: t("restart"),
+      options: [t("continue"), t("menu"), t("lang")],
+      path: (params) => {
+        // if yes go next question, else back to second_loop
+        if (params.userInput === t("continue")) {
+          return "next_question_query";
+        } else if (params.userInput === t("menu")) {
+          return "second_loop";
+        } else if (params.userInput === t("lang")) {
+          return "language_selection";
+        }
+      },
+    },
+    next_question_query: {
+      message: t("typeQuery"),
+      // continue to path to somewhere
+      path: "handle_api_query",
+    },
+    next_question_chat: {
+      message: "chatttttt",
+      path: "handle_api_chat",
     },
     render1: {
       render: <EligibilityForm />,
@@ -284,8 +334,28 @@ const App = () => {
         };
         return await handleApiCall(chatUrl, apiBody);
       },
-      path: "second_loop",
+      path: "prompt_user_chat",
       transition: { duration: 100 },
+    },
+
+    prompt_user_chat: {
+      message: t("restart"),
+      options: [t("continue"), t("menu"), t("lang")],
+      path: (params) => {
+        // if yes go next question, else back to second_loop
+        if (params.userInput === t("continue")) {
+          return "next_question_chat";
+        } else if (params.userInput === t("menu")) {
+          return "second_loop";
+        } else if (params.userInput === t("lang")) {
+          return "language_selection";
+        }
+      },
+    },
+    next_question_chat: {
+      message: t("generalQuery"),
+      // continue to path to somewhere
+      path: "handle_api_chat",
     },
     repeat: {
       transition: { duration: 3000 },
@@ -300,8 +370,8 @@ const App = () => {
 
   return (
     <>
-      <Button onClick={jumpToStart} text="language" />
-      <Button onClick={jumpToEnd} text="restart" />
+      {/* <Button onClick={jumpToStart} text="language" />
+      <Button onClick={jumpToEnd} text="restart" /> */}
       <PathsContext.Provider value={{ paths: paths, setPaths: setPaths }}>
         <BotOptionsContext.Provider value={{ botOptions, setBotOptions }}>
           <ChatBot

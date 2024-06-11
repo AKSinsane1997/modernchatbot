@@ -32,6 +32,10 @@ const resources = {
       schemeDescription: "Scheme Description",
       moreDetails: "More Details",
       errorSubmittingForm: "Error submitting form. Please try again.",
+      restart: "Do you want to continue or go to the main menu?",
+      continue: "continue",
+      menu: "main menu",
+      lang: "language",
     },
   },
   hi: {
@@ -64,6 +68,10 @@ const resources = {
       moreDetails: "अधिक जानकारी",
       errorSubmittingForm:
         "प्रपत्र जमा करने में त्रुटि। कृपया पुनः प्रयास करें।",
+      restart: "क्या आप जारी रखना चाहते हैं या मुख्य मेनू पर जाना चाहते हैं?",
+      continue: "जारी रखना",
+      menu: "मुख्य मेनू",
+      lang: "भाषा",
     },
   },
 };
