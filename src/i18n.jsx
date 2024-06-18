@@ -5,7 +5,7 @@ const resources = {
   en: {
     translation: {
       welcome:
-        "Johar 🙏 , I'm UDDP ChatBot and I am here to help you regarding information about the Resident Portal as well as any scheme related query.",
+        "Johar 🙏 , I'm <b>UDDP ChatBot</b>UDDP ChatBot and I am here to help you regarding information about the Resident Portal as well as any scheme related query.",
       assist:
         "I can assist you in finding government schemes that you may be eligible for based on your demographic and socio-economic information.",
       options: "To begin, kindly choose from below options",

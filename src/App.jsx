@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ChatBot from "react-chatbotify";
+import SummaryForm from "./SummaryForm"; // Import the new SummaryForm component
+import { ReactTyped } from "react-typed";
 
 const App = () => {
   const [form, setForm] = useState([]);
@@ -42,19 +44,31 @@ const App = () => {
     questions.forEach((question, index) => {
       newFlow[`question_${index}`] = {
         message: question.question,
-        options: question.values.map((value) => value.valuename),
-        chatDisabled: question.type === "select" || question.type === "radio",
+        options:
+          index === 0 ? null : question.values.map((value) => value.valuename),
+        chatDisabled:
+          index === 0
+            ? false
+            : question.type === "select" || question.type === "radio",
         function: (params) => {
-          const selectedValue = question.values.find(
-            (value) => value.valuename === params.userInput
-          );
+          let selectedValue;
+          if (index === 0) {
+            selectedValue = {
+              labelid: question.labelid,
+              valueid: params.userInput,
+            };
+          } else {
+            selectedValue = question.values.find(
+              (value) => value.valuename === params.userInput
+            );
+          }
           setForm((prevForm) => [
             ...prevForm,
             {
-              labelId: question.labelid,
+              labelId: selectedValue.labelid,
               valueId: selectedValue.valueid,
               question: question.question,
-              answer: selectedValue.valuename,
+              answer: selectedValue.valueid,
             },
           ]);
         },
@@ -75,19 +89,10 @@ const App = () => {
     newFlow["end"] = {
       message: "Thank you for your responses. Here is the summary:",
       render: (
-        <div style={formStyle}>
-          <h3>Summary of Your Answers:</h3>
-          {form.map((entry, index) => (
-            <p key={index}>
-              <strong>Question:</strong> {entry.question || entry.labelId}
-              <br />
-              <strong>Answer:</strong> {entry.answer || entry.valueId}
-            </p>
-          ))}
-          <button onClick={() => setCurrentStep("fetchSchemes")}>
-            Fetch Eligible Schemes
-          </button>
-        </div>
+        <SummaryForm
+          form={form}
+          onFetchSchemes={() => setCurrentStep("fetchSchemes")}
+        />
       ),
       chatDisabled: true,
       path: "fetchSchemes",
@@ -165,6 +170,30 @@ const App = () => {
       primaryColor: "#42b0c5",
       secondaryColor: "#491d8d",
       fontFamily: "Arial, sans-serif",
+    },
+    header: {
+      title: "UDDP chatbot",
+    },
+    footer: {
+      text: (
+        <>
+          <div>
+            <ReactTyped
+              strings={[
+                "Hello 👋 I'm your chatbot🤖",
+                "I am here to assist you!!",
+                "Scheme Eligibility Information",
+                "Detailed Scheme Descriptions",
+              ]}
+              typeSpeed={40}
+              backSpeed={50}
+              loop
+              style={{ color: "green", fontWeight: "bold" }}
+            />
+            <br />
+          </div>
+        </>
+      ),
     },
     audio: {
       disabled: false,
