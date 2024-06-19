@@ -5,7 +5,7 @@ const resources = {
   en: {
     translation: {
       welcome:
-        "Johar 🙏 , I'm <b>UDDP ChatBot</b>UDDP ChatBot and I am here to help you regarding information about the Resident Portal as well as any scheme related query.",
+        "Johar 🙏 , I'm UDDP ChatBot and I am here to help you regarding information about the Resident Portal as well as any scheme related query.",
       assist:
         "I can assist you in finding government schemes that you may be eligible for based on your demographic and socio-economic information.",
       options: "To begin, kindly choose from below options",
@@ -17,10 +17,10 @@ const resources = {
       option4:
         "Discover your scheme eligibility by answering a few quick questions. Click here to get started!",
       typeQuery:
-        "please type your query in the below input box. e.g - \n(I am 61 years old female construction worker belonging to scheduled caste category. what are my eligible schemes?)",
+        "Please input your age, gender, occupation, marital status, family income, disability status and community in the below input box to know your eligible schemes. e.g - <b>\n(I am 61 years old female construction worker belonging to scheduled caste category. what are my eligible schemes?)</b>",
       fillForm: "Please fill out the eligibility form.",
       generalQuery:
-        "please type your query in the below input box. e.g -\n1) What is maternity scheme\n2) what is eligible criteria of maternity\n3) I have 3 children. Am I eligible?",
+        "please type your query in the below input box. e.g - <b>\n1) What is maternity scheme\n2) what is eligible criteria of maternity\n3) I have 3 children. Am I eligible?</b>",
       chooseLanguage:
         "Johar 🙏 ,To start kindly choose your Preferred Language:",
       submit: "Submit",
@@ -32,10 +32,14 @@ const resources = {
       schemeDescription: "Scheme Description",
       moreDetails: "More Details",
       errorSubmittingForm: "Error submitting form. Please try again.",
-      restart: "Do you want to continue or go to the main menu?",
-      continue: "continue",
-      menu: "main menu",
-      lang: "language",
+
+      continue: "Do you want to continue the conversation?",
+      menu: "Main menu",
+      lang: "Language",
+      yes: "Yes",
+      no: "No",
+      choose: "kindly choose from below options",
+      chat: "kindly continue your conversation",
     },
   },
   hi: {
@@ -54,10 +58,10 @@ const resources = {
       option4:
         "निम्नलिखित कुछ प्रश्नों के उत्तर देकर अपनी योजना पात्रता जानें। आरंभ करने के लिए यहां क्लिक करें!",
       typeQuery:
-        "कृपया अपना प्रश्न नीचे दिए गए इनपुट बॉक्स में टाइप करें। उदा - \n(मैं 61 वर्ष की महिला निर्माण कार्यकर्ता हूं जो अनुसूचित जाति वर्ग से संबंधित है। मेरी योग्य योजनाएँ क्या हैं?)",
+        "कृपया अपनी पात्र योजनाओं को जानने के लिए नीचे दिए गए इनपुट बॉक्स में अपनी आयु, लिंग, व्यवसाय, वैवाहिक स्थिति, पारिवारिक आय, विकलांगता की स्थिति और समुदाय दर्ज करें। उदा - <b>\n(मैं 61 वर्ष की महिला निर्माण कार्यकर्ता हूं जो अनुसूचित जाति वर्ग से संबंधित है। मेरी योग्य योजनाएँ क्या हैं?)</b>",
       fillForm: "कृपया पात्रता फॉर्म भरें।",
       generalQuery:
-        "कृपया अपना प्रश्न नीचे दिए गए इनपुट बॉक्स में टाइप करें। उदा -\n1) मातृत्व योजना क्या है\n2) मातृत्व की पात्रता मापदंड क्या है\n3) मेरे 3 बच्चे हैं। क्या मैं पात्र हूँ?",
+        "कृपया अपना प्रश्न नीचे दिए गए इनपुट बॉक्स में टाइप करें। उदा - <b>\n1) मातृत्व योजना क्या है\n2) मातृत्व की पात्रता मापदंड क्या है\n3) मेरे 3 बच्चे हैं। क्या मैं पात्र हूँ?</b>",
       chooseLanguage: "शुरू करने के लिए, कृपया अपनी पसंदीदा भाषा का चयन करें:",
       submit: "जमा करें",
       select: "चुनना",
@@ -68,10 +72,14 @@ const resources = {
       moreDetails: "अधिक जानकारी",
       errorSubmittingForm:
         "प्रपत्र जमा करने में त्रुटि। कृपया पुनः प्रयास करें।",
-      restart: "क्या आप जारी रखना चाहते हैं या मुख्य मेनू पर जाना चाहते हैं?",
-      continue: "जारी रखना",
+
+      continue: "क्या आप बातचीत जारी रखना चाहते हैं?",
       menu: "मुख्य मेनू",
       lang: "भाषा",
+      yes: "हाँ",
+      no: "नहीं",
+      choose: "कृपया नीचे दिए गए विकल्पों में से चुनें",
+      chat: "कृपया अपनी बातचीत जारी रखें",
     },
   },
 };
